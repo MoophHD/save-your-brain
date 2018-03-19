@@ -4,6 +4,7 @@ import { Image } from 'react-native';
 import styled from 'styled-components';
 
 const Wrapper = styled(Container)`
+    background-color: blue;
     position: absolute;
     height: 100%;
     width: 100%;

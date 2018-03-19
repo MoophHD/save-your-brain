@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'state/configureStore';
-import Main from './scenes/Main';
 import PathFinder from './scenes/PathFinder';
 import { Font, AppLoading } from "expo";
 import { Root } from 'native-base';
