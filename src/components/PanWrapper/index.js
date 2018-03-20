@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { View, PanResponder } from 'react-native';
 import PropTypes from 'prop-types';
 import Vector from '../Vector';
@@ -8,8 +8,7 @@ const Wrapper = styled.View`
   height: 100%;
   width: 100%;
 `
-class PanWrapper extends Component {
-
+class PanWrapper extends PureComponent {
     componentWillMount() {
       
       const { onMove, onTap } = this.props;
@@ -23,7 +22,7 @@ class PanWrapper extends Component {
       onPanResponderGrant: (evt, gestureState) => {
         if (!onTap) return;
         
-        onMove( new Vector(evt.nativeEvent.pageX, evt.nativeEvent.pageY) );
+        onTap( new Vector(evt.nativeEvent.pageX, evt.nativeEvent.pageY) );
       },
       onPanResponderMove: (evt, gestureState, a) => {
         

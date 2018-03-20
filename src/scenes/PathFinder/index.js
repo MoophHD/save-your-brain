@@ -3,8 +3,16 @@ import { Container } from 'native-base';
 import styled from 'styled-components';
 import Background from 'components/Background';
 import Dot from './components/Dot';
+import MyLine from './components/MyLine';
 import PanWrapper from 'components/PanWrapper';
 import { dotSide } from 'config/PathFinder';
+import Vector from 'components/Vector';
+import Line from 'components/Line';
+
+let x1 = 0;
+let x2 = 100;
+let y1 = 50;
+let y2 = 100;
 
 const dotState = {
     lose: 'lose',
@@ -25,14 +33,16 @@ class PathFinder extends Component {
         this.state = {
             isDemo: true,
             ids: [],
-            byid: {}
+            byid: {},
+            linePath: '',
+            target: new Vector(0, 0)
         }
         
         this.handleMove = this.handleMove.bind(this);
     }
     
     handleMove(pos) {
-        const { ids, byid } = this.state;
+        const { ids, byid, linePath} = this.state;
         
         //check colission
         for(let i = 0; i < ids.length; i++) {
@@ -40,23 +50,36 @@ class PathFinder extends Component {
             let dot = byid[id];
             
             if (dot.state == "win" || dot.state == "lose") continue;
-            let distX = pos.x - (dot.x + dotRadius);
-            let distY = pos.y - (dot.y + dotRadius);
+            
+            let centerDotX = dot.x + dotRadius;
+            let centerDotY = dot.y + dotRadius;
+            let distX = pos.x - centerDotX;
+            let distY = pos.y - centerDotY;
             let distSqr = distX*distX + distY*distY;
             
+            
+            this.setState(() => ({target: pos}));
             //colission
             if (distSqr < dotRadiusSqr) {
+                //draw line
+                let nextLinePath = linePath.slice();
+                if (linePath) {
+                    nextLinePath += ` ${centerDotX},${centerDotX}`;
+                } else {
+                    nextLinePath = `${centerDotX},${centerDotX}`;
+                }
+                
+                
+                this.setState(() => ({linePath: nextLinePath}));
                 //next in order
                 if (dot.order - lastOrder == 1) {
                     lastOrder = dot.order;
                     
-                    console.log('win');
                     //win
                     this.setState(() => ({
                         byid: {...byid, [id]: {...byid[id], state: dotState.win}}
                     }))
                 } else {
-                    console.log("lose");
                     //lose
                     this.setState(() => ({
                         byid: {...byid, [id]: {...byid[id], state: dotState.lose}}
@@ -67,10 +90,6 @@ class PathFinder extends Component {
             }
             
         }
-    }
-    
-    handleTap(pos) {
-        console.log("pos");
     }
     
     clearLine() {
@@ -105,7 +124,7 @@ class PathFinder extends Component {
     }
     
     render() {
-        const { ids, byid } = this.state;
+        const { ids, byid, linePath, target } = this.state;
         
         let self;
         let dots = ids.map((id) => {
@@ -118,12 +137,22 @@ class PathFinder extends Component {
                 y={self.y} />
         });
         return(
-            <Container>
-                <PanWrapper onMove={this.handleMove}>
-                    <Background />
-                    {dots}
-                </PanWrapper>
+            
+            <Container style={{position: 'absolute', backgroundColor: 'crimson', height:'100%', width: '100%'}}>
+                <Line x1={x1} x2={x2} y1={y1} y2={y2} width={10} fill={'black'}/>
             </Container>
+            // <Container>
+            //     <PanWrapper
+            //         onTap={this.handleMove}
+            //         onMove={this.handleMove}>
+            //         <Background />
+            //         <MyLine 
+            //             path={linePath}
+            //             target={target}
+            //             />
+            //         {dots}
+            //     </PanWrapper>
+            // </Container>
         )
     }
 }

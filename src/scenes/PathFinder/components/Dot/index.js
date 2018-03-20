@@ -33,6 +33,12 @@ const MainCircle = styled(View)`
 `
 
 class Dot extends Component {
+    shouldComponentUpdate(nextProps) {
+        const differentState = this.props.state != nextProps.state;
+        
+        return differentState;
+    }
+    
     render() {
         const { state, x, y } = this.props;
         return(

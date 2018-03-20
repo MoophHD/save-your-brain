@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { Container } from 'native-base';
 import { Image } from 'react-native';
 import styled from 'styled-components';
 
 const Wrapper = styled(Container)`
-    background-color: blue;
     position: absolute;
     height: 100%;
     width: 100%;
@@ -17,12 +16,17 @@ const BgImage = styled.Image`
     height: undefined;
     width: undefined;
 `
-const Background = () => (
-    <Wrapper>
-        <BgImage 
-            
-            source={require('assets/images/bg.jpg')} />
-    </Wrapper>
-)
+
+class Background extends PureComponent {
+    render() {
+       return (
+            <Wrapper>
+                <BgImage 
+                    
+                    source={require('assets/images/bg.jpg')} />
+            </Wrapper>
+        ) 
+    }
+}
 
 export default Background;
