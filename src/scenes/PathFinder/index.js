@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { Container } from 'native-base';
 import styled from 'styled-components';
+import { dotSide } from 'config/PathFinder';
 import Background from 'components/Background';
 import Dot from './components/Dot';
 import MyLine from './components/MyLine';
 import PanWrapper from 'components/PanWrapper';
-import { dotSide } from 'config/PathFinder';
 import Vector from 'components/Vector';
 import Line from 'components/Line';
+import ActiveLine from './components/ActiveLine';
 
-let x1 = 0;
-let x2 = 100;
-let y1 = 50;
-let y2 = 100;
+const MyContainer = styled(Container)`
+    position: relative;
+`
 
 const dotState = {
     lose: 'lose',
@@ -25,6 +25,7 @@ let dots = 3;
 const dotRadius = dotSide * 0.5;
 const dotRadiusSqr = dotRadius * dotRadius;
 let lastOrder = -1;
+let lastAnchor = {};
 
 class PathFinder extends Component {
     constructor(props){
@@ -35,7 +36,8 @@ class PathFinder extends Component {
             ids: [],
             byid: {},
             linePath: '',
-            target: new Vector(0, 0)
+            target: new Vector(0, 0),
+            lastTriggeredDot: -1
         }
         
         this.handleMove = this.handleMove.bind(this);
@@ -43,6 +45,8 @@ class PathFinder extends Component {
     
     handleMove(pos) {
         const { ids, byid, linePath} = this.state;
+        this.setState(() => ({target: pos}));
+        
         
         //check colission
         for(let i = 0; i < ids.length; i++) {
@@ -57,8 +61,6 @@ class PathFinder extends Component {
             let distY = pos.y - centerDotY;
             let distSqr = distX*distX + distY*distY;
             
-            
-            this.setState(() => ({target: pos}));
             //colission
             if (distSqr < dotRadiusSqr) {
                 //draw line
@@ -70,7 +72,8 @@ class PathFinder extends Component {
                 }
                 
                 
-                this.setState(() => ({linePath: nextLinePath}));
+                this.setState(() => ({linePath: nextLinePath, lastTriggeredDot: id}));
+                
                 //next in order
                 if (dot.order - lastOrder == 1) {
                     lastOrder = dot.order;
@@ -123,6 +126,14 @@ class PathFinder extends Component {
         this.gen();
     }
     
+    componentWillUpdate(nextProps, nextState) {
+        if (this.state.lastTriggeredDot != nextState.lastTriggeredDot) {
+            let byid = nextState.byid;
+            let lastTriggeredDot = byid[nextState.lastTriggeredDot];
+            lastAnchor = new Vector(lastTriggeredDot.x + dotSide * .5, lastTriggeredDot.y + dotSide * .5);
+        }
+    }
+    
     render() {
         const { ids, byid, linePath, target } = this.state;
         
@@ -136,23 +147,31 @@ class PathFinder extends Component {
                 x={self.x} 
                 y={self.y} />
         });
+        
         return(
-            
-            <Container style={{position: 'absolute', backgroundColor: 'crimson', height:'100%', width: '100%'}}>
-                <Line x1={x1} x2={x2} y1={y1} y2={y2} width={10} fill={'black'}/>
-            </Container>
-            // <Container>
-            //     <PanWrapper
-            //         onTap={this.handleMove}
-            //         onMove={this.handleMove}>
-            //         <Background />
-            //         <MyLine 
-            //             path={linePath}
-            //             target={target}
-            //             />
-            //         {dots}
-            //     </PanWrapper>
-            // </Container>
+            <MyContainer>
+                <PanWrapper
+                    onTap={this.handleMove}
+                    onMove={this.handleMove}>
+                    <Background />
+                    <MyLine 
+                        path={linePath}
+                        />
+                        
+                    { Object.keys(lastAnchor).length ?
+                        <ActiveLine
+                            x1={lastAnchor.x}
+                            y1={lastAnchor.y}
+                            x2={target.x}
+                            y2={target.y}
+                            fill="red"
+                            width={2}/>
+                            :null
+                    }
+                            
+                    {dots}
+                </PanWrapper>
+            </MyContainer>
         )
     }
 }
