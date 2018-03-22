@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import { Container } from 'native-base';
 import styled from 'styled-components';
 import { dotSide } from 'config/PathFinder';
-import Background from 'components/Background';
 import Dot from './components/Dot';
 import MyLine from './components/MyLine';
-import PanWrapper from 'components/PanWrapper';
-import Vector from 'components/Vector';
-import Line from 'components/Line';
+import PanWrapper from '../PanWrapper';
+import Vector from '../Vector';
 import ActiveLine from './components/ActiveLine';
 
 const MyContainer = styled(Container)`
@@ -41,6 +39,7 @@ class PathFinder extends Component {
         }
         
         this.handleMove = this.handleMove.bind(this);
+        this.handleRelease = this.handleRelease.bind(this);
     }
     
     handleMove(pos) {
@@ -87,12 +86,23 @@ class PathFinder extends Component {
                     this.setState(() => ({
                         byid: {...byid, [id]: {...byid[id], state: dotState.lose}}
                     }))
+                    
+                    this.props.onLose();
+                }
+                
+                if (dot.order == ids.length - 1) {
+                    this.props.onWin();
                 }
                 
                 break;
             }
             
         }
+    }
+    
+    handleRelease() {
+        console.log('release')
+        this.setState(() => ({target: lastAnchor}));
     }
     
     clearLine() {
@@ -152,20 +162,16 @@ class PathFinder extends Component {
             <MyContainer>
                 <PanWrapper
                     onTap={this.handleMove}
+                    onRelease={this.handleRelease}
                     onMove={this.handleMove}>
-                    <Background />
                     <MyLine 
                         path={linePath}
                         />
                         
                     { Object.keys(lastAnchor).length ?
                         <ActiveLine
-                            x1={lastAnchor.x}
-                            y1={lastAnchor.y}
-                            x2={target.x}
-                            y2={target.y}
-                            fill="red"
-                            width={2}/>
+                            anchor={lastAnchor}
+                            target={target} />
                             :null
                     }
                             

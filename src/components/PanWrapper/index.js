@@ -11,7 +11,7 @@ const Wrapper = styled.View`
 class PanWrapper extends PureComponent {
     componentWillMount() {
       
-      const { onMove, onTap } = this.props;
+      const { onMove, onTap, onRelease } = this.props;
     this._panResponder = PanResponder.create({
       // Ask to be the responder:
       onStartShouldSetPanResponder: (evt, gestureState) => true,
@@ -33,8 +33,9 @@ class PanWrapper extends PureComponent {
       },
       onPanResponderTerminationRequest: (evt, gestureState) => true,
       onPanResponderRelease: (evt, gestureState) => {
-        // The user has released all touches while this view is the
-        // responder. This typically means a gesture has succeeded
+        if (!onRelease) return;
+        
+        onRelease();
       },
       onPanResponderTerminate: (evt, gestureState) => {
         // Another component has become the responder, so this gesture

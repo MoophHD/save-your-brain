@@ -4,22 +4,19 @@ import { TouchableHighlight, View} from 'react-native';
 import PropTypes from 'prop-types';
 
 const Triggerable = styled.TouchableHighlight`
-    flex: 1;
 `
 
-const TouchableView = ({ onPress, children, ...otherProps}) => {
-    
+const TouchableView = ({ onPress, children, ...props}) => {
     return (
-        <Triggerable 
+        <Triggerable
             onPress={() => onPress()}
-            {...otherProps} >
+            {...props} >
             <View>
                 { children }
             </View>
         </Triggerable>
         )
 }
-
 TouchableView.propTypes = {
     onPress: PropTypes.func,
     children: PropTypes.node

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'state/configureStore';
-import PathFinder from './scenes/PathFinder';
+import TrainingSession from './scenes/TrainingSession';
 import { Font, AppLoading } from "expo";
 import { Root } from 'native-base';
+import { StatusBar } from 'react-native';
 
 const store = configureStore();
 
@@ -25,7 +26,8 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Root>
-          { this.state.isLoaded && <PathFinder /> }
+          <StatusBar hidden />
+          { this.state.isLoaded && <TrainingSession plan={[0]}/> }
         </Root>
       </Provider>
   )

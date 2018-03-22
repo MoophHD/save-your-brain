@@ -1,1 +1,1 @@
-export const dotSide = 100;
+export const dotSide = 65;

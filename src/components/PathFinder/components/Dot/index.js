@@ -14,7 +14,6 @@ const state = {
     demo: 'demo'
 }
 
-// const mainDisplayCl = '
 const cl = {
     lose: '#FF7577',
     win: '#77FF75',
