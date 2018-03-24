@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Svg, Polyline } from 'react-native-svg';
-import { PanResponder } from 'react-native';
 import { DEVICE_HEIGHT, DEVICE_WIDTH } from 'config/metrics';
-import Vector from 'components/Vector';
-
 
 class MyLine extends Component {
     shouldComponentUpdate(nextProps) {

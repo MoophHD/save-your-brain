@@ -5,6 +5,7 @@ import TrainingSession from './scenes/TrainingSession';
 import { Font, AppLoading } from "expo";
 import { Root } from 'native-base';
 import { StatusBar } from 'react-native';
+import Swipe from 'components/Swipe';
 
 const store = configureStore();
 
@@ -27,7 +28,7 @@ class App extends Component {
       <Provider store={store}>
         <Root>
           <StatusBar hidden />
-          { this.state.isLoaded && <TrainingSession plan={[0]}/> }
+          { this.state.isLoaded && <Swipe onFinish={() => {}} plan={[1]}/> }
         </Root>
       </Provider>
   )

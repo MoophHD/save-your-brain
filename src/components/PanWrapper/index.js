@@ -8,10 +8,15 @@ const Wrapper = styled.View`
   height: 100%;
   width: 100%;
 `
+
+let xyMinSum;
+let lastDeltas = 0;
 class PanWrapper extends PureComponent {
     componentWillMount() {
-      
-      const { onMove, onTap, onRelease } = this.props;
+    const { onMove, onTap, onRelease, moveDelta } = this.props;
+    
+    if (moveDelta) xyMinSum = ~~Math.sqrt(moveDelta * moveDelta / 2);
+    
     this._panResponder = PanResponder.create({
       // Ask to be the responder:
       onStartShouldSetPanResponder: (evt, gestureState) => true,
@@ -24,10 +29,22 @@ class PanWrapper extends PureComponent {
         
         onTap( new Vector(evt.nativeEvent.pageX, evt.nativeEvent.pageY) );
       },
-      onPanResponderMove: (evt, gestureState, a) => {
+      onPanResponderMove: (evt, gestureState) => {
         
         if (!onMove) return;
-  
+        
+        
+        if (moveDelta) {
+          let thisDelta = gestureState.dx + gestureState.dy;
+          
+          if ( lastDeltas+=thisDelta < xyMinSum ) {
+            return;
+          } else {
+            lastDeltas = 0;
+          }
+        }
+          
+        
         onMove( new Vector(evt.nativeEvent.pageX, evt.nativeEvent.pageY) );
         
       },

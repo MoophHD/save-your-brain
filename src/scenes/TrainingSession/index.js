@@ -8,8 +8,10 @@ import Lose from './components/Lose';
 import PauseContainer from './components/PauseContainer';
 import PauseBtn from './components/PauseBtn';
 import Background from './components/Background';
-import Hp from './components/Hp';
+import Progress from './components/Progress';
+
 import PathFinder from '../../components/PathFinder';
+import Swipe from '../../components/Swipe';
 
 const UiContainer = styled.View`
     position: relative;
@@ -17,7 +19,6 @@ const UiContainer = styled.View`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    background-color: crimson;
 `
 
 const Wrapper = styled.View`
@@ -47,10 +48,13 @@ class TrainingSession extends Component {
             pauseActive: false,
             loseActive: false
         }
+        
+        this.onLose = this.onLose.bind(this);
+        this.onWin = this.onWin.bind(this);
     }
     
     onLose() {
-        this.setState(() => ({loseActive: true}))
+        // this.setState(() => ({loseActive: true}))
     }
     
     setPause(isPaused) {
@@ -77,14 +81,13 @@ class TrainingSession extends Component {
         }
     }
     
-       componentDidMount() {
-        this.trainingProps = { onLose: this.onLose };
+    componentWillMount() {
+        this.trainingProps = { onLose: this.onLose, onWin: this.onWin };
     }
     
     render() {
         const { byid } = this.props;
         const { active, pauseActive } = this.state;
-        
         let Training = cloneElement(legend[byid[active].name], this.trainingProps);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
         return(
             <Wrapper>
@@ -93,10 +96,10 @@ class TrainingSession extends Component {
                     
                 <UiContainer>
                     <PauseBtn onPress={() => this.setPause(true)}/>
-                    <Hp />
+                    <Progress value={3} />
                 </UiContainer>
                 
-                {/* Training */}
+                { Training }
                 
                 { pauseActive &&  <PauseContainer onBack={() => this.setPause(false)}/> }
             </Wrapper>
@@ -119,5 +122,6 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, null)(TrainingSession);
 
 const legend = {
-    'PathFinder': <PathFinder />
+    'PathFinder': <PathFinder />,
+    'Swipe': <Swipe />
 }

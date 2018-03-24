@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Text } from 'react-native';
 
-class Hp extends Component {
+class Progress extends Component {
     render() {
         const { value } = this.props;
         return(
@@ -11,8 +11,8 @@ class Hp extends Component {
     }
 }
 
-Hp.propTypes = {
+Progress.propTypes = {
     value: PropTypes.number
 }
 
-export default Hp;
+export default Progress;

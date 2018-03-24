@@ -10,6 +10,9 @@ const initialState = {
             name: 'PathFinder',
             lvl: 0,
             exp: 0
+        },
+        1: {
+            name: 'Swipe'
         }
     }
 }

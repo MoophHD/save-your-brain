@@ -24,6 +24,7 @@ const dotRadius = dotSide * 0.5;
 const dotRadiusSqr = dotRadius * dotRadius;
 let lastOrder = -1;
 let lastAnchor = {};
+let target = new Vector(0, 0);
 
 class PathFinder extends Component {
     constructor(props){
@@ -34,7 +35,6 @@ class PathFinder extends Component {
             ids: [],
             byid: {},
             linePath: '',
-            target: new Vector(0, 0),
             lastTriggeredDot: -1
         }
         
@@ -43,12 +43,18 @@ class PathFinder extends Component {
     }
     
     handleMove(pos) {
+        console.log('move');
         const { ids, byid, linePath} = this.state;
-        this.setState(() => ({target: pos}));
         
+        if (this.myLine) {
+            target = pos;
+            this.myLine.setNativeProps({ target });
+        }
         
-        //check colission
+        //heck colission
+        
         for(let i = 0; i < ids.length; i++) {
+            console.log('loop', i);
             let id = ids[i];
             let dot = byid[id];
             
@@ -62,6 +68,9 @@ class PathFinder extends Component {
             
             //colission
             if (distSqr < dotRadiusSqr) {
+                console.log('colission');
+                
+              
                 //draw line
                 let nextLinePath = linePath.slice();
                 if (linePath) {
@@ -70,6 +79,8 @@ class PathFinder extends Component {
                     nextLinePath = `${centerDotX},${centerDotX}`;
                 }
                 
+                lastAnchor = { x: byid[id].x, y: byid[id].y };
+                  return;
                 
                 this.setState(() => ({linePath: nextLinePath, lastTriggeredDot: id}));
                 
@@ -101,8 +112,7 @@ class PathFinder extends Component {
     }
     
     handleRelease() {
-        console.log('release')
-        this.setState(() => ({target: lastAnchor}));
+        if (Object.keys(lastAnchor).length) this.setState(() => ({target: lastAnchor}));
     }
     
     clearLine() {
@@ -145,31 +155,31 @@ class PathFinder extends Component {
     }
     
     render() {
-        const { ids, byid, linePath, target } = this.state;
+        const { ids, byid, linePath } = this.state;
         
         let self;
         let dots = ids.map((id) => {
             self = byid[id];
             
-            return <Dot
-                state={self.state}
-                key={`_dot${id}`} 
-                x={self.x} 
-                y={self.y} />
+            return <Dot 
+                    state={self.state}
+                    key={`_dot${id}`} 
+                    x={self.x} 
+                    y={self.y} />
         });
         
+        console.log(Object.keys(lastAnchor).length);
         return(
             <MyContainer>
                 <PanWrapper
+                    moveDelta={1}
                     onTap={this.handleMove}
                     onRelease={this.handleRelease}
                     onMove={this.handleMove}>
-                    <MyLine 
-                        path={linePath}
-                        />
                         
                     { Object.keys(lastAnchor).length ?
                         <ActiveLine
+                            ref={el =>{ console.log(el);  this.myLine = el}}
                             anchor={lastAnchor}
                             target={target} />
                             :null
