@@ -8,7 +8,6 @@ import GestureRecognizer, { swipeDirections } from '../GestureRecognizer';
 
 const MyGestureRecognizer = styled(GestureRecognizer)`
     flex-grow: 1;
-    background-color: crimson;
 `
 
 class Swipe extends Component {
@@ -72,4 +71,7 @@ class Swipe extends Component {
     }
 }
 
+
+// style={{transform: [{translateX: this.offsetX}, {translateY: this.offsetY}]}}
+                        
 export default Swipe;

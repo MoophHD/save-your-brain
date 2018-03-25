@@ -10,3 +10,6 @@ export const state = {
     lose: 1,
     idle: 2
 }
+
+export const imgW = 362;
+export const arrowTrailW = 2000;
