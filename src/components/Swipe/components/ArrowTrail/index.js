@@ -1,20 +1,43 @@
 import React, { PureComponent } from 'react';
-import { Image, View } from 'react-native';
+import { Image, View, Text } from 'react-native';
 import styled from 'styled-components';
 import { imgW, arrowTrailW } from 'config/Swipe';
 
 let paddingR = 0;
 let containerW = arrowTrailW;
-
 const Wrapper = styled.View`
-    padding-right: ${paddingR}px;
-    right: 0;
     background-color: crimson;
-    width: ${containerW}px
-    position: absolute;
+    padding-right: ${paddingR}px;
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transform: rotate(${props => props.angle || 0}deg) scale(0.15);
 `
+
+let VerticalContainer = styled.View`
+    height: ${arrowTrailW};
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+`
+
+
+let HorizontalContainer = styled.View`
+    height: ${arrowTrailW};
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+`
+
+
+
+    // right: 0;
+    // width: ${containerW}px
+    // position: absolute;
 
 let repeatImgs;
 class ArrowTrail extends PureComponent {
@@ -38,9 +61,17 @@ class ArrowTrail extends PureComponent {
     }
     
     render(){
+        
+        //{ repeatImgs && repeatImgs}
+        const { angle } = this.props; 
         return(
-            <Wrapper>
-                { repeatImgs && repeatImgs}
+            <Wrapper angle={angle}>
+                <VerticalContainer>
+                    {repeatImgs}
+                </VerticalContainer>
+                <HorizontalContainer>
+                    {repeatImgs}
+                </HorizontalContainer>
             </Wrapper>    
         )
     }

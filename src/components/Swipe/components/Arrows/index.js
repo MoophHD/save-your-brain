@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Animated, Text, View, Easing } from 'react-native';
 import PropTypes from 'prop-types';
-import { direction, state } from 'config/Swipe';
+import { direction, result } from 'config/Swipe';
 import { Image } from 'react-native';
 import styled from 'styled-components';
 import ArrowTrail from '../ArrowTrail';
@@ -13,18 +13,13 @@ const Wrapper = styled(View)`
 `
 
 const AniView = styled(Animated.View)`
-background-color: crimson;
     position: relative;
+    flex-grow: 1;
 `
 
 class Swipe extends Component {
     constructor(props) {
         super(props);
-        
-        this.state = {
-            offsetX: new Animated.Value(0),
-            offsetY: new Animated.Value(0)
-        }
         
         this.offsetX = new Animated.Value(0);
         this.offsetY = new Animated.Value(0);
@@ -36,24 +31,19 @@ class Swipe extends Component {
             this.changeFakeDir(nextProps.fakeDir);
         }
         
-        if (this.props.result != nextProps.result) {
-            //play ani
-            
-            if (nextProps.result == state.win) {
-                
-            } else if (nextProps.result == state.lose){
-                
-            } else {
-                
-            }
-            
+        //play ani
+        if (nextProps.result == result.win) {
+            console.log('win')
+        } else if (nextProps.result == result.lose){
+            console.log('lose')
         }
+            
     }
     
     changeFakeDir(dir){
-        console.log('changeDor');
       this.offsetX.setValue(0);
       this.offsetY.setValue(0);
+      
       let target, sideSign;
       switch (dir) {
           case direction.up:
@@ -81,18 +71,20 @@ class Swipe extends Component {
         target,
             {
               toValue: sideSign * arrowTrailW,
-              duration: 400000,
+              duration: 4000 * 75,
               easing: Easing.linear
             }
-          )
+          ).start();
     }
     
     render() {
-        const { fakeDir } = this.props;
+        const { fakeDir, realDir } = this.props;
+        
+        let angle = getAngle(realDir);
         return(
             <Wrapper>
-                <AniView>
-                    <ArrowTrail />
+                <AniView style={{ transform: [ {translateX: this.offsetX}, {translateY: this.offsetY} ] }}>
+                    <ArrowTrail angle={angle}/>
                 </AniView>
             </Wrapper>
         )
@@ -102,8 +94,25 @@ class Swipe extends Component {
 
 Swipe.propTypes = {
     // enums
-    fakeDir: PropTypes.number,
-    result: PropTypes.number
+    realDir: PropTypes.string,
+    fakeDir: PropTypes.string,
+    result: PropTypes.string
 }
 
 export default Swipe;
+
+function getAngle(dir) {
+    switch (dir) {
+        case direction.up:
+            return -90;
+        case direction.down:
+            return 90;
+        case direction.left:
+            return 180;
+        case direction.right:
+            return 0;
+        
+        default:
+          break;
+    }
+}

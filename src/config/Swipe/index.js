@@ -1,14 +1,13 @@
 export const direction = {
-    left: 0,
-    right: 1,
-    up: 2,
-    down: 3
+    left: 'left',
+    right: 'right',
+    up: 'up',
+    down: 'down'
 }
 
-export const state = {
-    win: 0,
-    lose: 1,
-    idle: 2
+export const result = {
+    win: 'win',
+    lose: 'lose'
 }
 
 export const imgW = 362;
