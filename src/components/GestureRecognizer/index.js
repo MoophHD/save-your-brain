@@ -10,8 +10,8 @@ export const swipeDirections = {
 };
 
 const swipeConfig = {
-  velocityThreshold: 0.3,
-  directionalOffsetThreshold: 80
+  velocityThreshold: 0.15, //0.2
+  directionalOffsetThreshold: 100 //80
 };
 
 function isValidSwipe(velocity, velocityThreshold, directionalOffset, directionalOffsetThreshold) {
@@ -96,6 +96,7 @@ class GestureRecognizer extends Component {
 
   _isValidVerticalSwipe(gestureState) {
     const {vy, dx} = gestureState;
+    console.log('vertical swipe validator', `vy ${vy}`, `dx ${dx}`);
     const {velocityThreshold, directionalOffsetThreshold} = this.swipeConfig;
     return isValidSwipe(vy, velocityThreshold, dx, directionalOffsetThreshold);
   }

@@ -25,22 +25,30 @@ class Swipe extends Component {
         this.handleSwipe = this.handleSwipe.bind(this);
     }
     
+    onLose() {
+        this.setState(() => ({result: result.lose}))
+    }
+    
+    onWin() {
+        this.setState(() => ({result: result.win}))
+    }
+    
     handleSwipe(gestureName, gestureState) {
         if (!gestureName) return;
         const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
         let realDir = this.state.realDir;
         switch (gestureName) {
           case SWIPE_UP:
-            this.setState(() => ({result: realDir == direction.up ? result.win : result.lose}));
+            realDir == direction.up ? this.onWin() : this.onLose();
             break;
           case SWIPE_DOWN:
-            this.setState(() => ({result: realDir == direction.down ? result.win : result.lose}));
+            realDir == direction.down ? this.onWin(): this.onLose();
             break;
           case SWIPE_LEFT:
-            this.setState(() => ({result: realDir == direction.left ? result.win : result.lose}));
+            realDir == direction.left ? this.onWin(): this.onLose();
             break;
           case SWIPE_RIGHT:
-            this.setState(() => ({result: realDir == direction.right ? result.win : result.lose}));
+            realDir == direction.right ?this.onWin() :this.onLose();
             break;
         }
         
@@ -61,7 +69,6 @@ class Swipe extends Component {
         let fakeDir = objectChance(fakeObj);
         
         this.setState(() => ({ realDir, fakeDir })) 
-        
     }
 
     componentDidMount() {
@@ -79,6 +86,5 @@ class Swipe extends Component {
 }
 
 
-// style={{transform: [{translateX: this.offsetX}, {translateY: this.offsetY}]}}
                         
 export default Swipe;

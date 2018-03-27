@@ -10,5 +10,11 @@ export const result = {
     lose: 'lose'
 }
 
-export const imgW = 362;
-export const arrowTrailW = 2000;
+export const blockH = 389;
+export const blockW = 369;
+export const blocks = 15;
+
+export const container = {
+    w: blockW * blocks,
+    h: blockH * blocks
+}

@@ -1,21 +1,25 @@
 import React, { Component } from 'react';
 import { Animated, Text, View, Easing } from 'react-native';
 import PropTypes from 'prop-types';
-import { direction, result } from 'config/Swipe';
+import { direction, result, container} from 'config/Swipe';
 import { Image } from 'react-native';
 import styled from 'styled-components';
 import ArrowTrail from '../ArrowTrail';
-import { arrowTrailW } from 'config/Swipe';
 
 const Wrapper = styled(View)`
     flex-grow: 1;
     display: flex;
+    justify-content: center;
+    align-items: center;
 `
 
 const AniView = styled(Animated.View)`
     position: relative;
     flex-grow: 1;
+    height: ${container.h}px;
+    width: ${container.w}px;
 `
+
 
 class Swipe extends Component {
     constructor(props) {
@@ -26,9 +30,9 @@ class Swipe extends Component {
     }
     
     componentWillReceiveProps(nextProps){
-        if (this.props.fakeDir != nextProps.fakeDir) {
+        if (this.props.realDir != nextProps.realDir) {
             //change dir
-            this.changeFakeDir(nextProps.fakeDir);
+            this.changeFakeDir(nextProps.fakeDir)
         }
         
         //play ani
@@ -70,8 +74,8 @@ class Swipe extends Component {
       Animated.timing(
         target,
             {
-              toValue: sideSign * arrowTrailW,
-              duration: 4000 * 75,
+              toValue: sideSign * 2000,
+              duration: 4000 * 5,
               easing: Easing.linear
             }
           ).start();
@@ -79,11 +83,10 @@ class Swipe extends Component {
     
     render() {
         const { fakeDir, realDir } = this.props;
-        
         let angle = getAngle(realDir);
         return(
             <Wrapper>
-                <AniView style={{ transform: [ {translateX: this.offsetX}, {translateY: this.offsetY} ] }}>
+                <AniView style={{ transform: [ {translateX: this.offsetX}, {translateY:this.offsetY} ] }}>
                     <ArrowTrail angle={angle}/>
                 </AniView>
             </Wrapper>

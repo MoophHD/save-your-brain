@@ -1,77 +1,46 @@
 import React, { PureComponent } from 'react';
 import { Image, View, Text } from 'react-native';
 import styled from 'styled-components';
-import { imgW, arrowTrailW } from 'config/Swipe';
+import { container, blockW, blockH, blocks } from 'config/Swipe';
 
-let paddingR = 0;
-let containerW = arrowTrailW;
+let blockPerSide = blocks * blocks;
+
+let aniOffsetX = container.w / 4;
+let aniOffsetY = container.h / 4;
+
+console.log(aniOffsetY);
 const Wrapper = styled.View`
-    background-color: crimson;
-    padding-right: ${paddingR}px;
+    left: -900px;
+    height: ${container.h}px;
+    width: ${container.w}px;
+    transform: rotate(${props => props.angle || 0}deg)   translate(${aniOffsetX}px, -1000px);
     display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    transform: rotate(${props => props.angle || 0}deg) scale(0.15);
 `
 
-let VerticalContainer = styled.View`
-    height: ${arrowTrailW};
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-`
-
-
-let HorizontalContainer = styled.View`
-    height: ${arrowTrailW};
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-`
-
-
-
-    // right: 0;
-    // width: ${containerW}px
-    // position: absolute;
-
-let repeatImgs;
+let imgs = [];
 class ArrowTrail extends PureComponent {
-    componentWillMount() {
-        //build repeat imgs
+    componentWillMount() { 
+        if(imgs.length) return;
         
-        let imgs = ~~((containerW-paddingR) / imgW);
-        
-        repeatImgs = [];
-        let offset  = 0;
-        for (let i = 0; i < imgs; i++) {
-            repeatImgs.push( 
-                <Image 
-                    key={`swiperImg${i}`}
-                    source={require('assets/Swiper/arrow_trail.png')}
-                    /> 
-            )
+        for (let i = 0; i < blockPerSide; i++) {
+            imgs.push(
+                <Image
+                    style={{height: blockH, width: blockW}}
+                    key={`_arrowKey${i}`} 
+                    source={require('assets/Swipe/arrow_trail.png')}/>)
         }
-        
-        offset += imgW;
     }
     
     render(){
-        
-        //{ repeatImgs && repeatImgs}
         const { angle } = this.props; 
+                    
         return(
             <Wrapper angle={angle}>
-                <VerticalContainer>
-                    {repeatImgs}
-                </VerticalContainer>
-                <HorizontalContainer>
-                    {repeatImgs}
-                </HorizontalContainer>
+                {imgs}
             </Wrapper>    
         )
     }
